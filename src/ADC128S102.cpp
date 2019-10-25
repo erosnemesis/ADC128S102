@@ -8,12 +8,10 @@
  * Constructor.
  */
 ADC128S102::ADC128S102()
-{
-  // be sure not to call anything that requires hardware be initialized here, put those in begin()
-}
+{}
 
 /**
- * Use this in the setup() method to initialize the hardware and begin SPI
+ * Use this in the setup() method to initialize the hardware and begin SPI if it hasn't already.
  */
 void ADC128S102::begin()
 {
