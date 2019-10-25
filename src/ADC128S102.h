@@ -9,6 +9,8 @@
 #include "Particle.h"
 #include "Arduino.h"
 
+#define ADC_COUNTS  (1<<12)
+
 class ADC128S102
 {
 public:
