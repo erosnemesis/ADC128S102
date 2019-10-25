@@ -13,23 +13,30 @@ ADC128S102::ADC128S102()
 }
 
 /**
- * Example method.
+ * Use this in the setup() method to initialize the hardware and begin SPI
  */
 void ADC128S102::begin()
 {
     // initialize hardware
     pinMode(SS, OUTPUT);
     SPI.begin();
-    SPI.setBitOrder(MSBFIRST);
-    SPI.setDataMode(SPI_MODE2);
 }
 
-int ADC128S102::readADC(int channel){
-    digitalWrite(SS, LOW);
-    //SPI.transfer( 0x01 );
-    int hi = SPI.transfer( (channel << 3 ));
-    int lo = SPI.transfer( 0 );
-    digitalWrite(SS, HIGH);
+/**
+ * Supply the channel number to read the Analog value converted to 12-bit
+ */
+int16_t ADC128S102::readADC(int8_t channel){
 
-    return (hi << 8) | lo;
+    SPI.beginTransaction(settings);
+    digitalWrite(SS, LOW); // Drive Slave Select LOW to select chip
+    
+    byte control = channel << 3; // DONTC DONTC ADD2 ADD1 ADD0 DONTC DONTC DONTC
+    buffer = SPI.transfer(control);
+    buffer << 8;
+    buffer |= SPI.transfer(0);
+
+    digitalWrite(SS, HIGH); // Drive Slave Select HIGH so other hardware can use SPI
+    SPI.endTransaction();
+
+    return buffer;
 }
