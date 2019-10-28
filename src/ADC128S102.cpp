@@ -18,6 +18,7 @@ void ADC128S102::begin()
     // initialize hardware
     pinMode(SS, OUTPUT);
     SPI.begin();
+    SPI.setClockSpeed(16, MHZ);
 }
 
 /**
@@ -30,8 +31,8 @@ int16_t ADC128S102::readADC(int8_t channel){
     
     byte control = channel << 3; // DONTC DONTC ADD2 ADD1 ADD0 DONTC DONTC DONTC
     buffer = SPI.transfer(control);
-    buffer <<= 8;
-    buffer |= SPI.transfer(0);
+    buffer = buffer << 8;
+    buffer = buffer | SPI.transfer(0);
 
     digitalWrite(SS, HIGH); // Drive Slave Select HIGH so other hardware can use SPI
     SPI.endTransaction();
